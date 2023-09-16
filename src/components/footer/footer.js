@@ -20,18 +20,12 @@ function Footer({ todoLeft, onClearCompleted, filterName, onFilterChange }) {
 Footer.defaultProps = {
   todoLeft: Infinity,
   filterName: 'all',
-  onClearCompleted: () => {
-    // console.log('Clear completed todo items!');
-  },
-  onFilterChange: () => {
-    // console.log('Transition function to changing filter for todo items');
-  },
 };
 
 Footer.propTypes = {
   todoLeft: PropTypes.number,
-  onClearCompleted: PropTypes.func,
+  onClearCompleted: PropTypes.func.isRequired,
   filterName: PropTypes.oneOf(['all', 'active', 'completed']),
-  onFilterChange: PropTypes.func,
+  onFilterChange: PropTypes.func.isRequired,
 };
 export default Footer;

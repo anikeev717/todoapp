@@ -40,24 +40,21 @@ function TodoItem({ id, editItem, label, completed, edited, createdDate, onCompl
 }
 
 TodoItem.defaultProps = {
-  // completed: false,
-  // edited: false,
-  // createdDate: new Date(),
-  onCompleted: () => {
-    // console.log("Toggle todo item's status");
-  },
-  onDeleted: () => {
-    // console.log('Remove todo item from list!');
-  },
+  completed: false,
+  edited: false,
+  createdDate: new Date(),
 };
 
 TodoItem.propTypes = {
+  id: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
-  completed: PropTypes.bool.isRequired,
-  edited: PropTypes.bool.isRequired,
-  createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]).isRequired,
-  onCompleted: PropTypes.func,
-  onDeleted: PropTypes.func,
+  edited: PropTypes.bool,
+  completed: PropTypes.bool,
+  createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
+  editItem: PropTypes.func.isRequired,
+  onEdited: PropTypes.func.isRequired,
+  onCompleted: PropTypes.func.isRequired,
+  onDeleted: PropTypes.func.isRequired,
 };
 
 export default TodoItem;

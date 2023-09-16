@@ -24,15 +24,6 @@ function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem }) {
   return <ul className="todo-list">{elements}</ul>;
 }
 
-TodoList.defaultProps = {
-  onCompleted: () => {
-    // console.log('Transition function to toggle todo items status!');
-  },
-  onDeleted: () => {
-    // console.log('Transition function to remove todo item!');
-  },
-};
-
 TodoList.propTypes = {
   todos: PropTypes.arrayOf(
     PropTypes.shape({
@@ -43,8 +34,10 @@ TodoList.propTypes = {
       createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
     })
   ).isRequired,
-  onCompleted: PropTypes.func,
-  onDeleted: PropTypes.func,
+  onCompleted: PropTypes.func.isRequired,
+  onDeleted: PropTypes.func.isRequired,
+  onEdited: PropTypes.func.isRequired,
+  editItem: PropTypes.func.isRequired,
 };
 
 export default TodoList;

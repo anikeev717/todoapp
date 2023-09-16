@@ -34,12 +34,9 @@ export default class TodoFilters extends Component {
 
 TodoFilters.defaultProps = {
   filterName: 'all',
-  onFilterChange: () => {
-    // console.log('Change filter for todo items');
-  },
 };
 
 TodoFilters.propTypes = {
   filterName: PropTypes.string,
-  onFilterChange: PropTypes.func,
+  onFilterChange: PropTypes.func.isRequired,
 };

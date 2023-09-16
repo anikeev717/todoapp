@@ -38,12 +38,6 @@ export default class NewTodoItem extends Component {
   }
 }
 
-NewTodoItem.defaultProps = {
-  onItemAdded: () => {
-    console.log('Add new todo!');
-  },
-};
-
 NewTodoItem.propTypes = {
-  onItemAdded: PropTypes.func,
+  onItemAdded: PropTypes.func.isRequired,
 };
