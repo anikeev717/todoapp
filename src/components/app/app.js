@@ -20,7 +20,7 @@ export default class App extends Component {
       };
     };
     this.state = {
-      todoData: [this.createItem('Completed task'), this.createItem('Editing task'), this.createItem('Active task')],
+      todoData: [],
       filterName: 'all',
     };
     this.onToggled = (arr, id, propName, labelNewValue) => {
