@@ -80,14 +80,6 @@ export default class App extends Component {
     };
 
     this.onFilter = (todos, filterName) => {
-      // if (filterName === 'active') return todos.filter((e) => !e.completed);
-      // if (filterName === 'completed') return todos.filter((e) => e.completed);
-      // return todos;
-      // return filterName === 'active'
-      //   ? todos.filter((e) => !e.completed)
-      //   : filterName === 'completed'
-      //   ? todos.filter((e) => e.completed)
-      //   : todos;
       switch (filterName) {
         case 'active':
           return todos.filter((e) => !e.completed);

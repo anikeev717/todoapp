@@ -44,7 +44,7 @@ TodoItemInputForm.defaultProps = {
 };
 
 TodoItemInputForm.propTypes = {
-  // id: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
   edited: PropTypes.bool,
   editItem: PropTypes.func.isRequired,
