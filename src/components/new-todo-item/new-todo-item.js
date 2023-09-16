@@ -18,9 +18,10 @@ export default class NewTodoItem extends Component {
     this.onSubmit = (e) => {
       const { label } = this.state;
       const { onItemAdded } = this.props;
+      const newLabel = label.replace(/\s+/g, ' ').trim();
       e.preventDefault();
-      if (label.trimStart()) {
-        onItemAdded(label);
+      if (newLabel) {
+        onItemAdded(newLabel);
         this.setState({ label: '' });
       }
     };

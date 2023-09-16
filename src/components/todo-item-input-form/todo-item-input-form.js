@@ -21,7 +21,13 @@ export default class TodoItemInputForm extends Component {
       e.preventDefault();
       const { inputValue } = this.state;
       const { id, editItem } = this.props;
-      if (inputValue.trimStart()) editItem(id, inputValue);
+      const newLabel = inputValue.replace(/\s+/g, ' ').trim();
+      if (newLabel) {
+        editItem(id, newLabel);
+        this.setState({
+          inputValue: newLabel,
+        });
+      }
     };
   }
 
