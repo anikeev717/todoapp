@@ -21,7 +21,7 @@ export default class TodoItemInputForm extends Component {
       e.preventDefault();
       const { inputValue } = this.state;
       const { id, editItem } = this.props;
-      editItem(id, inputValue);
+      if (inputValue.trimStart()) editItem(id, inputValue);
     };
   }
 

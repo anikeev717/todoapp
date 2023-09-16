@@ -19,7 +19,7 @@ export default class NewTodoItem extends Component {
       const { label } = this.state;
       const { onItemAdded } = this.props;
       e.preventDefault();
-      if (label) {
+      if (label.trimStart()) {
         onItemAdded(label);
         this.setState({ label: '' });
       }
