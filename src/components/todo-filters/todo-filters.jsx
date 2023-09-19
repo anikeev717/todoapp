@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 
 import './todo-filters.css';
 
-export default class TodoFilters extends Component {
-  constructor() {
-    super();
-
-    this.elements = [
-      { label: 'All', name: 'all' },
-      { label: 'Active', name: 'active' },
-      { label: 'Completed', name: 'completed' },
-    ];
-  }
+export class TodoFilters extends Component {
+  elements = [
+    { label: 'All', name: 'all' },
+    { label: 'Active', name: 'active' },
+    { label: 'Completed', name: 'completed' },
+  ];
 
   render() {
     const { filterName, onFilterChange } = this.props;

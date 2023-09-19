@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './footer.css';
 
-import TodoFilters from '../todo-filters';
+import { TodoFilters } from '../todo-filters/todo-filters';
 
-function Footer({ todoLeft, onClearCompleted, filterName, onFilterChange }) {
+export function Footer({ todoLeft, onClearCompleted, filterName, onFilterChange }) {
   return (
     <footer className="footer">
       <span className="todo-count">{todoLeft} items left</span>
@@ -28,4 +28,3 @@ Footer.propTypes = {
   filterName: PropTypes.oneOf(['all', 'active', 'completed']),
   onFilterChange: PropTypes.func.isRequired,
 };
-export default Footer;

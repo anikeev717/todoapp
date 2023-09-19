@@ -2,16 +2,15 @@ import PropTypes from 'prop-types';
 
 import './todo-list.css';
 
-import TodoItem from '../todo-item';
+import { TodoItem } from '../todo-item/todo-item';
 
-function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem }) {
+export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem }) {
   const elements = todos.map((item) => {
     const { id } = item;
 
     return (
       <li key={id}>
         <TodoItem
-          // eslint-disable-next-line react/jsx-props-no-spreading
           {...item}
           onCompleted={() => onCompleted(id)}
           onDeleted={() => onDeleted(id)}
@@ -39,5 +38,3 @@ TodoList.propTypes = {
   onEdited: PropTypes.func.isRequired,
   editItem: PropTypes.func.isRequired,
 };
-
-export default TodoList;

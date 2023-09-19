@@ -4,9 +4,9 @@ import { formatDistanceToNow } from 'date-fns';
 
 import './todo-item.css';
 
-import TodoItemInputForm from '../todo-item-input-form';
+import { TodoItemInputForm } from '../todo-item-input-form/todo-item-input-form';
 
-function TodoItem({ id, editItem, label, completed, edited, createdDate, onCompleted, onEdited, onDeleted }) {
+export function TodoItem({ id, editItem, label, completed, edited, createdDate, onCompleted, onEdited, onDeleted }) {
   let classNames = '';
 
   if (completed) {
@@ -56,5 +56,3 @@ TodoItem.propTypes = {
   onCompleted: PropTypes.func.isRequired,
   onDeleted: PropTypes.func.isRequired,
 };
-
-export default TodoItem;

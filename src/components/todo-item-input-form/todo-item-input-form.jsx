@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './todo-item-input-form.css';
 
-export default class TodoItemInputForm extends Component {
+export class TodoItemInputForm extends Component {
   constructor(props) {
     super(props);
 
