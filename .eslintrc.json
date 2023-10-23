@@ -60,5 +60,6 @@
         "moduleDirectory": ["node_modules", "src/"]
       }
     }
-  }
+  },
+  "ignorePatterns": "src/**/*.css"
 }

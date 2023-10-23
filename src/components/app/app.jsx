@@ -14,10 +14,12 @@ export class App extends Component {
 
   id = 0;
 
-  createItem = (label) => {
+  createItem = (label, timerTime) => {
     this.id += 1;
     return {
       label,
+      timerTime,
+      timerId: 0,
       completed: false,
       edited: false,
       id: this.id,
@@ -68,8 +70,8 @@ export class App extends Component {
     });
   };
 
-  addItem = (text) => {
-    const newItem = this.createItem(text);
+  addItem = (text, time) => {
+    const newItem = this.createItem(text, time);
     this.setState(({ todoData }) => {
       const todoDataFresh = [...todoData.slice(), newItem];
       return { todoData: todoDataFresh };
@@ -98,6 +100,33 @@ export class App extends Component {
     this.setState({ filterName });
   };
 
+  onTick = (id, propName) => {
+    const { todoData } = this.state;
+    const index = todoData.findIndex((el) => el.id === id);
+    const oldItem = todoData[index];
+    let newItem;
+    const needStatus = propName === 'timerTime';
+
+    if (!!oldItem[propName] === needStatus) {
+      const propValue = needStatus ? oldItem[propName] - 1 : setInterval(() => this.onTick(id, 'timerTime'), 1000);
+      newItem = {
+        ...oldItem,
+        [propName]: propValue,
+      };
+    } else {
+      clearInterval(oldItem.timerId);
+      newItem = {
+        ...oldItem,
+        timerId: 0,
+      };
+    }
+    this.setState({ todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)] });
+  };
+
+  onTimerOn = (id) => {
+    this.onTick(id, 'timerId');
+  };
+
   render() {
     const { todoData, filterName } = this.state;
     const visibleData = this.onFilter(todoData, filterName);
@@ -112,6 +141,7 @@ export class App extends Component {
           onDeleted={this.deleteItem}
           onEdited={this.onEdited}
           editItem={this.editItem}
+          onTimerOn={this.onTimerOn}
         />
         <Footer
           todoLeft={activeCount}
