@@ -18,8 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix --color",
+    "lint": "eslint ./src/**",
+    "lint:fix": "eslint ./src/** --fix --color",
     "format": "prettier --write ./src",
     "prepare": "husky install"
   },

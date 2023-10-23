@@ -66,22 +66,23 @@
   padding: 15px 85px 15px 60px;
 }
 
-.todo-list li label .created {
+.todo-list li label .created,
+.timer {
   font-size: 13px;
   color: gray;
 }
 
 .todo-list li label .description {
-  word-break: break-all;
   display: block;
   line-height: 1.2;
   transition: color 0.4s;
   font-weight: 400;
   color: #4d4d4d;
-  /* Добавил для красоты */
-  white-space: nowrap;
+  width: 60%;
+  /* word-break: break-all; */
+  /* white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 
 .todo-list .completed label .description {
@@ -91,8 +92,8 @@
 
 .todo-list li .icon {
   position: absolute;
-  top: 0;
-  bottom: -3px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 30px;
   height: 40px;
   font-size: 34px;
