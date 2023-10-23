@@ -120,7 +120,9 @@ export class App extends Component {
         timerId: 0,
       };
     }
-    this.setState({ todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)] });
+    this.setState(() => ({
+      todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)],
+    }));
   };
 
   onTimerOn = (id) => {

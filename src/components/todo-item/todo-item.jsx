@@ -30,33 +30,24 @@ export function TodoItem({
     classNames += 'editing ';
   }
 
-  const timerButtonClass = timerId ? 'pause' : 'start';
-
   const createdAgo = `created ${formatDistanceToNow(createdDate, {
     includeSeconds: true,
   })} ago`;
+
+  const timerButtonClass = timerId ? 'pause' : 'start';
 
   const showTime = `${Math.floor(timerTime / 60)
     .toString()
     .padStart(2, '0')}:${(timerTime % 60).toString().padStart(2, '0')}`;
 
-  const onPressComplete = () => {
-    if (timerId) {
-      onTimerOn();
-    }
-    onCompleted();
+  const onFunctionCall = (propStatus, func = () => {}) => {
+    if (propStatus) onTimerOn();
+    func();
   };
 
-  const onPressDelete = () => {
-    if (timerId) {
-      onTimerOn();
-    }
-    onDeleted();
-  };
-
-  const onPressTimer = () => {
-    if (!completed) onTimerOn();
-  };
+  const onPressComplete = () => onFunctionCall(timerId, onCompleted);
+  const onPressDelete = () => onFunctionCall(timerId, onDeleted);
+  const onPressTimer = () => onFunctionCall(!completed);
 
   return (
     <div className={classNames}>
