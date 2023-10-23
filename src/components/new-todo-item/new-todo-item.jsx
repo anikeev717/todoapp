@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './new-todo-item.css';
 
 export class NewTodoItem extends Component {
-  state = { label: '', time: { min: '', sec: '' } };
+  state = { label: '', time: { min: '30', sec: '' } };
 
   onLabelChange = (e) => {
     this.setState({
