@@ -119,6 +119,7 @@ export class App extends Component {
         ...oldItem,
         timerId: 0,
       };
+      if (needStatus) newItem.completed = true;
     }
     this.setState(() => ({
       todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)],
