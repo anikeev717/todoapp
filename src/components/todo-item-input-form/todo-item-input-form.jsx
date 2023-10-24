@@ -29,6 +29,16 @@ export class TodoItemInputForm extends Component {
         });
       }
     };
+
+    this.onEscape = (e) => {
+      const { label, id, editItem } = this.props;
+      if (e.key === 'Escape') {
+        editItem(id, label);
+        this.setState({
+          inputValue: label,
+        });
+      }
+    };
   }
 
   render() {
@@ -37,7 +47,13 @@ export class TodoItemInputForm extends Component {
     if (edited) {
       return (
         <form onSubmit={this.onSubmit}>
-          <input type="text" className="edit" value={inputValue} onChange={this.onLabelChange} />
+          <input
+            type="text"
+            className="edit"
+            value={inputValue}
+            onKeyDown={this.onEscape}
+            onChange={this.onLabelChange}
+          />
         </form>
       );
     }

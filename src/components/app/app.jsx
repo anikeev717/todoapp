@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 
 import './app.css';
@@ -14,20 +13,7 @@ export class App extends Component {
 
   id = 0;
 
-  createItem = (label, timerTime) => {
-    this.id += 1;
-    return {
-      label,
-      timerTime,
-      timerId: 0,
-      completed: false,
-      edited: false,
-      id: this.id,
-      createdDate: new Date(),
-    };
-  };
-
-  onToggled = (arr, id, propName, labelNewValue) => {
+  static onToggled = (arr, id, propName, labelNewValue) => {
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr[index];
     const newItem = {
@@ -38,10 +24,21 @@ export class App extends Component {
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   };
 
+  static onFilter = (todos, filterName) => {
+    switch (filterName) {
+      case 'active':
+        return todos.filter((e) => !e.completed);
+      case 'completed':
+        return todos.filter((e) => e.completed);
+      default:
+        return todos;
+    }
+  };
+
   onCompleted = (id) => {
     this.setState(({ todoData }) => {
       return {
-        todoData: this.onToggled(todoData, id, 'completed'),
+        todoData: App.onToggled(todoData, id, 'completed'),
       };
     });
   };
@@ -49,15 +46,7 @@ export class App extends Component {
   onEdited = (id) => {
     this.setState(({ todoData }) => {
       return {
-        todoData: this.onToggled(todoData, id, 'edited'),
-      };
-    });
-  };
-
-  editItem = (id, value) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.onToggled(todoData, id, 'edited', value),
+        todoData: App.onToggled(todoData, id, 'edited'),
       };
     });
   };
@@ -80,20 +69,30 @@ export class App extends Component {
 
   clearCompleted = () => {
     this.setState(({ todoData }) => {
-      const todoDataFresh = [...todoData.filter((e) => !e.completed)];
+      const todoDataFresh = [...todoData.filter((e) => !e.completed || e.edited)];
       return { todoData: todoDataFresh };
     });
   };
 
-  onFilter = (todos, filterName) => {
-    switch (filterName) {
-      case 'active':
-        return todos.filter((e) => !e.completed);
-      case 'completed':
-        return todos.filter((e) => e.completed);
-      default:
-        return todos;
-    }
+  editItem = (id, value) => {
+    this.setState(({ todoData }) => {
+      return {
+        todoData: App.onToggled(todoData, id, 'edited', value),
+      };
+    });
+  };
+
+  createItem = (label, timerTime) => {
+    this.id += 1;
+    return {
+      label,
+      timerTime,
+      timerId: 0,
+      completed: false,
+      edited: false,
+      id: this.id,
+      createdDate: new Date(),
+    };
   };
 
   onFilterChange = (filterName) => {
@@ -132,7 +131,7 @@ export class App extends Component {
 
   render() {
     const { todoData, filterName } = this.state;
-    const visibleData = this.onFilter(todoData, filterName);
+    const visibleData = App.onFilter(todoData, filterName);
     const activeCount = todoData.filter((e) => !e.completed).length;
 
     return (
