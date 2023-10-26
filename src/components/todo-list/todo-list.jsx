@@ -4,7 +4,7 @@ import './todo-list.css';
 
 import { TodoItem } from '../todo-item/todo-item';
 
-export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, onTimerOn }) {
+export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, onTimerOn, timerInProgress }) {
   const elements = todos.map((item) => {
     const { id } = item;
 
@@ -17,6 +17,7 @@ export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, on
           onEdited={() => onEdited(id)}
           onTimerOn={() => onTimerOn(id)}
           editItem={editItem}
+          timerInProgress={timerInProgress}
         />
       </li>
     );
@@ -30,6 +31,7 @@ TodoList.propTypes = {
       label: PropTypes.string,
       timerTime: PropTypes.number,
       timerId: PropTypes.number,
+      timerMark: PropTypes.number,
       completed: PropTypes.bool,
       edited: PropTypes.bool,
       id: PropTypes.number,
@@ -41,4 +43,5 @@ TodoList.propTypes = {
   onEdited: PropTypes.func.isRequired,
   editItem: PropTypes.func.isRequired,
   onTimerOn: PropTypes.func.isRequired,
+  timerInProgress: PropTypes.bool.isRequired,
 };

@@ -19,6 +19,7 @@ export function TodoItem({
   onEdited,
   onDeleted,
   onTimerOn,
+  timerInProgress,
 }) {
   let classNames = '';
 
@@ -47,7 +48,7 @@ export function TodoItem({
 
   const onPressComplete = () => onFunctionCall(timerId, onCompleted);
   const onPressDelete = () => onFunctionCall(timerId, onDeleted);
-  const onPressTimer = () => onFunctionCall(!completed);
+  const onPressTimer = () => onFunctionCall(!completed && (!timerInProgress || timerId));
 
   return (
     <div className={classNames}>

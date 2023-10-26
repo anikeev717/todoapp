@@ -6,9 +6,16 @@ import { NewTodoItem } from '../new-todo-item/new-todo-item';
 import { Footer } from '../footer/footer';
 
 export class App extends Component {
+  static timerTimeCalculator = (oldTimerTime, newTimerMark, oldTimerMark) => {
+    const newTimerTime = oldTimerTime - (newTimerMark - oldTimerMark);
+    const newValidTimerTime = (newTimerTime < 0 && 0) || newTimerTime;
+    return newValidTimerTime;
+  };
+
   state = {
     todoData: [],
     filterName: 'all',
+    timerInProgress: false,
   };
 
   id = 0;
@@ -92,6 +99,7 @@ export class App extends Component {
       edited: false,
       id: this.id,
       createdDate: new Date(),
+      timerMark: 0,
     };
   };
 
@@ -103,22 +111,27 @@ export class App extends Component {
     const { todoData } = this.state;
     const index = todoData.findIndex((el) => el.id === id);
     const oldItem = todoData[index];
-    let newItem;
     const needStatus = propName === 'timerTime';
+    let newItem;
 
     if (!!oldItem[propName] === needStatus) {
-      const propValue = needStatus ? oldItem[propName] - 1 : setInterval(() => this.onTick(id, 'timerTime'), 1000);
+      const newTimerMark = Math.floor(new Date().getTime() / 1000);
+      const propValue = needStatus
+        ? App.timerTimeCalculator(oldItem[propName], newTimerMark, oldItem.timerMark)
+        : setInterval(() => this.onTick(id, 'timerTime'), 1000);
+
       newItem = {
         ...oldItem,
         [propName]: propValue,
+        timerMark: newTimerMark,
       };
     } else {
       clearInterval(oldItem.timerId);
       newItem = {
         ...oldItem,
         timerId: 0,
+        completed: needStatus,
       };
-      if (needStatus) newItem.completed = true;
     }
     this.setState(() => ({
       todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)],
@@ -126,11 +139,14 @@ export class App extends Component {
   };
 
   onTimerOn = (id) => {
+    this.setState((prev) => ({
+      timerInProgress: !prev.timerInProgress,
+    }));
     this.onTick(id, 'timerId');
   };
 
   render() {
-    const { todoData, filterName } = this.state;
+    const { todoData, filterName, timerInProgress } = this.state;
     const visibleData = App.onFilter(todoData, filterName);
     const activeCount = todoData.filter((e) => !e.completed).length;
 
@@ -144,6 +160,7 @@ export class App extends Component {
           onEdited={this.onEdited}
           editItem={this.editItem}
           onTimerOn={this.onTimerOn}
+          timerInProgress={timerInProgress}
         />
         <Footer
           todoLeft={activeCount}
