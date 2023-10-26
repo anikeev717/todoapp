@@ -132,6 +132,7 @@ export class App extends Component {
         timerId: 0,
         completed: needStatus,
       };
+      this.setState({ timerInProgress: false });
     }
     this.setState(() => ({
       todoData: [...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)],
