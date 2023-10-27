@@ -8,8 +8,8 @@ import { Footer } from '../footer/footer';
 export class App extends Component {
   static timerTimeCalculator = (oldTimerTime, newTimerMark, oldTimerMark) => {
     const timeMarkDifference = newTimerMark - oldTimerMark;
-    if (oldTimerTime < timeMarkDifference) return 0;
-    return oldTimerTime - timeMarkDifference;
+    const newTimerTime = oldTimerTime - timeMarkDifference;
+    return newTimerTime < 0 ? 0 : newTimerTime;
   };
 
   state = {
