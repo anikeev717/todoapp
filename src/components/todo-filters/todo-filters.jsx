@@ -1,9 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+
+import { AppContext } from '../context/context';
 
 import classes from './todo-filters.module.css';
 
-export function TodoFilters({ filterName, onFilterChange }) {
+export function TodoFilters() {
+  const { filterName, onFilterChange } = useContext(AppContext);
   const elements = [
     { label: 'All', name: 'all' },
     { label: 'Active', name: 'active' },
@@ -23,12 +25,3 @@ export function TodoFilters({ filterName, onFilterChange }) {
 
   return <ul className={classes.filters}>{buttons}</ul>;
 }
-
-TodoFilters.defaultProps = {
-  filterName: 'all',
-};
-
-TodoFilters.propTypes = {
-  filterName: PropTypes.string,
-  onFilterChange: PropTypes.func.isRequired,
-};

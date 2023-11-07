@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 // import { formatDistanceToNow } from 'date-fns';
 
@@ -6,32 +6,32 @@ import { TodoItemInputForm } from '../todo-item-input-form/todo-item-input-form'
 import { getFunctionWrapper } from '../../services/get-function-wrapper';
 import { getShowingTime } from '../../services/get-showing-time';
 import { getCreatedAgo } from '../../services/get-created-ago';
+import { AppContext } from '../context/context';
 
 import classes from './todo-item.module.css';
 
-export function TodoItem({
-  id,
-  label,
-  timerTime,
-  edited,
-  completed,
-  createdDate,
-  editItem,
-  onEdited,
-  onCompleted,
-  onDeleted,
-  onTimerOn,
-  activeId,
-}) {
+export function TodoItem({ id, label, timerTime, edited, completed, createdDate, activeId }) {
+  const { onEdited, onCompleted, onDeleted, onTimerOn } = useContext(AppContext);
+
   const todoItemClasses = [completed ? classes.completed : '', edited ? classes.editing : ''].join(' ');
 
   const createdAgo = getCreatedAgo(createdDate);
 
   const showTime = getShowingTime(timerTime);
 
-  const onPressComplete = () => getFunctionWrapper(activeId === id, onTimerOn, onCompleted);
-  const onPressDelete = () => getFunctionWrapper(activeId === id, onTimerOn, onDeleted);
-  const onPressTimer = () => getFunctionWrapper(!completed && (!activeId || activeId === id), onTimerOn);
+  const onPressComplete = () =>
+    getFunctionWrapper(
+      activeId === id,
+      () => onTimerOn(id),
+      () => onCompleted(id)
+    );
+  const onPressDelete = () =>
+    getFunctionWrapper(
+      activeId === id,
+      () => onTimerOn(id),
+      () => onDeleted(id)
+    );
+  const onPressTimer = () => getFunctionWrapper(!completed && (!activeId || activeId === id), () => onTimerOn(id));
 
   return (
     <div className={todoItemClasses}>
@@ -53,10 +53,10 @@ export function TodoItem({
           </span>
           <span className={classes.created}>{createdAgo}</span>
         </label>
-        <button className={`${classes.icon} ${classes['icon-edit']}`} type="button" onClick={onEdited} />
+        <button className={`${classes.icon} ${classes['icon-edit']}`} type="button" onClick={() => onEdited(id)} />
         <button className={`${classes.icon} ${classes['icon-destroy']}`} type="button" onClick={onPressDelete} />
       </div>
-      <TodoItemInputForm id={id} label={label} edited={edited} editItem={editItem} />
+      <TodoItemInputForm id={id} label={label} edited={edited} />
     </div>
   );
 }
@@ -74,10 +74,5 @@ TodoItem.propTypes = {
   edited: PropTypes.bool,
   completed: PropTypes.bool,
   createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
-  editItem: PropTypes.func.isRequired,
-  onEdited: PropTypes.func.isRequired,
-  onCompleted: PropTypes.func.isRequired,
-  onDeleted: PropTypes.func.isRequired,
-  onTimerOn: PropTypes.func.isRequired,
   activeId: PropTypes.number.isRequired,
 };

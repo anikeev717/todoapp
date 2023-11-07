@@ -4,21 +4,13 @@ import { TodoItem } from '../todo-item/todo-item';
 
 import classes from './todo-list.module.css';
 
-export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, onTimerOn, activeId }) {
+export function TodoList({ todos, activeId }) {
   const elements = todos.map((item) => {
     const { id } = item;
 
     return (
       <li key={id}>
-        <TodoItem
-          {...item}
-          onCompleted={() => onCompleted(id)}
-          onDeleted={() => onDeleted(id)}
-          onEdited={() => onEdited(id)}
-          onTimerOn={() => onTimerOn(id)}
-          editItem={editItem}
-          activeId={activeId}
-        />
+        <TodoItem {...item} activeId={activeId} />
       </li>
     );
   });
@@ -36,10 +28,5 @@ TodoList.propTypes = {
       createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
     })
   ).isRequired,
-  onCompleted: PropTypes.func.isRequired,
-  onDeleted: PropTypes.func.isRequired,
-  onEdited: PropTypes.func.isRequired,
-  editItem: PropTypes.func.isRequired,
-  onTimerOn: PropTypes.func.isRequired,
   activeId: PropTypes.number.isRequired,
 };

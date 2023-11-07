@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { TodoList } from '../todo-list/todo-list';
 import { NewTodoItem } from '../new-todo-item/new-todo-item';
 import { Footer } from '../footer/footer';
 import { getTimerMark, getTimerTimeValue } from '../../services/get-timer-functions';
+import { AppContext } from '../context/context';
 
 import classes from './app.module.css';
 
@@ -36,15 +37,21 @@ export function App() {
     }
   };
 
-  const onCompleted = (id) => {
-    setTodoData(onToggled(todoData, id, 'completed'));
-  };
+  const onCompleted = useCallback(
+    (id) => {
+      setTodoData(onToggled(todoData, id, 'completed'));
+    },
+    [todoData]
+  );
 
-  const onEdited = (id) => {
-    setTodoData(onToggled(todoData, id, 'edited'));
-  };
+  const onEdited = useCallback(
+    (id) => {
+      setTodoData(onToggled(todoData, id, 'edited'));
+    },
+    [todoData]
+  );
 
-  const deleteItem = (id) => {
+  const onDeleted = (id) => {
     setTodoData((prev) => {
       const index = prev.findIndex((e) => e.id === id);
       const todoDataFresh = [...prev.slice(0, index), ...prev.slice(index + 1)];
@@ -79,9 +86,12 @@ export function App() {
     });
   };
 
-  const editItem = (id, value) => {
-    setTodoData(onToggled(todoData, id, 'edited', value));
-  };
+  const editItem = useCallback(
+    (id, value) => {
+      setTodoData(onToggled(todoData, id, 'edited', value));
+    },
+    [todoData]
+  );
 
   const onFilterChange = (filterName) => {
     setFilterName(filterName);
@@ -119,24 +129,26 @@ export function App() {
       clearInterval(interval);
     };
   }, [activeId, todoData]);
+
+  const appContextValue = useMemo(
+    () => ({
+      onCompleted,
+      onDeleted,
+      onEdited,
+      editItem,
+      onTimerOn,
+      filterName,
+      onFilterChange,
+    }),
+    [editItem, filterName, onCompleted, onEdited]
+  );
   return (
-    <div className={classes.todoapp}>
-      <NewTodoItem onItemAdded={addItem} />
-      <TodoList
-        todos={visibleData}
-        onCompleted={onCompleted}
-        onDeleted={deleteItem}
-        onEdited={onEdited}
-        editItem={editItem}
-        onTimerOn={onTimerOn}
-        activeId={activeId}
-      />
-      <Footer
-        todoLeft={activeCount}
-        onClearCompleted={clearCompleted}
-        filterName={filterName}
-        onFilterChange={onFilterChange}
-      />
-    </div>
+    <AppContext.Provider value={appContextValue}>
+      <div className={classes.todoapp}>
+        <NewTodoItem onItemAdded={addItem} />
+        <TodoList todos={visibleData} activeId={activeId} />
+        <Footer todoLeft={activeCount} onClearCompleted={clearCompleted} />
+      </div>
+    </AppContext.Provider>
   );
 }

@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { getValidLabel } from '../../services/get-valid-values-functions';
+import { AppContext } from '../context/context';
 
 import classes from './todo-item-input-form.module.css';
 
-export function TodoItemInputForm({ label, id, editItem, edited }) {
+export function TodoItemInputForm({ label, id, edited }) {
+  const { editItem } = useContext(AppContext);
   const [inputValue, setInputValue] = useState(label);
 
   const onLabelChange = (e) => {
@@ -45,6 +47,5 @@ TodoItemInputForm.defaultProps = {
 TodoItemInputForm.propTypes = {
   label: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  editItem: PropTypes.func.isRequired,
   edited: PropTypes.bool,
 };
