@@ -4,13 +4,13 @@ import { TodoItem } from '../todo-item/todo-item';
 
 import classes from './todo-list.module.css';
 
-export function TodoList({ todos, activeId }) {
+export function TodoList({ todos }) {
   const elements = todos.map((item) => {
     const { id } = item;
 
     return (
       <li key={id}>
-        <TodoItem {...item} activeId={activeId} />
+        <TodoItem {...item} />
       </li>
     );
   });
@@ -28,5 +28,4 @@ TodoList.propTypes = {
       createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
     })
   ).isRequired,
-  activeId: PropTypes.number.isRequired,
 };

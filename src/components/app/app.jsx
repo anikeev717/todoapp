@@ -139,14 +139,15 @@ export function App() {
       onTimerOn,
       filterName,
       onFilterChange,
+      activeId,
     }),
-    [editItem, filterName, onCompleted, onEdited]
+    [activeId, editItem, filterName, onCompleted, onEdited]
   );
   return (
     <AppContext.Provider value={appContextValue}>
       <div className={classes.todoapp}>
         <NewTodoItem onItemAdded={addItem} />
-        <TodoList todos={visibleData} activeId={activeId} />
+        <TodoList todos={visibleData} />
         <Footer todoLeft={activeCount} onClearCompleted={clearCompleted} />
       </div>
     </AppContext.Provider>

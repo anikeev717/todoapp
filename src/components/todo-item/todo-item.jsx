@@ -10,8 +10,8 @@ import { AppContext } from '../context/context';
 
 import classes from './todo-item.module.css';
 
-export function TodoItem({ id, label, timerTime, edited, completed, createdDate, activeId }) {
-  const { onEdited, onCompleted, onDeleted, onTimerOn } = useContext(AppContext);
+export function TodoItem({ id, label, timerTime, edited, completed, createdDate }) {
+  const { onEdited, onCompleted, onDeleted, onTimerOn, activeId } = useContext(AppContext);
 
   const todoItemClasses = [completed ? classes.completed : '', edited ? classes.editing : ''].join(' ');
 
@@ -74,5 +74,4 @@ TodoItem.propTypes = {
   edited: PropTypes.bool,
   completed: PropTypes.bool,
   createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
-  activeId: PropTypes.number.isRequired,
 };
