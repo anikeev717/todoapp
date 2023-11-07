@@ -1,31 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import './todo-filters.css';
+import classes from './todo-filters.module.css';
 
-export class TodoFilters extends Component {
-  elements = [
+export function TodoFilters({ filterName, onFilterChange }) {
+  const elements = [
     { label: 'All', name: 'all' },
     { label: 'Active', name: 'active' },
     { label: 'Completed', name: 'completed' },
   ];
 
-  render() {
-    const { filterName, onFilterChange } = this.props;
-    const buttons = this.elements.map(({ label, name }) => {
-      const selected = filterName === name;
-      const classNames = selected ? 'selected' : '';
-      return (
-        <li key={name}>
-          <button className={classNames} type="button" onClick={() => onFilterChange(name)}>
-            {label}
-          </button>
-        </li>
-      );
-    });
+  const buttons = elements.map(({ label, name }) => {
+    const selected = filterName === name;
+    return (
+      <li key={name}>
+        <button className={selected ? classes.selected : ''} type="button" onClick={() => onFilterChange(name)}>
+          {label}
+        </button>
+      </li>
+    );
+  });
 
-    return <ul className="filters">{buttons}</ul>;
-  }
+  return <ul className={classes.filters}>{buttons}</ul>;
 }
 
 TodoFilters.defaultProps = {

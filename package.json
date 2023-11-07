@@ -9,8 +9,10 @@
     "date-fns": "^2.30.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-css-modules": "^4.7.11",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "sass": "^1.69.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -56,6 +58,10 @@
   "author": "",
   "license": "ISC",
   "lint-staged": {
-    "src/**/*.{js,jsx}": ["npm run lint:fix", "npm run format","git add"]
+    "src/**/*.{js,jsx}": [
+      "npm run lint:fix",
+      "npm run format",
+      "git add"
+    ]
   }
 }

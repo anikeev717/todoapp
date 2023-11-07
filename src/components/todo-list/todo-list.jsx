@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 
-import './todo-list.css';
-
 import { TodoItem } from '../todo-item/todo-item';
 
-export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, onTimerOn, timerInProgress }) {
+import classes from './todo-list.module.css';
+
+export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, onTimerOn, activeId }) {
   const elements = todos.map((item) => {
     const { id } = item;
 
@@ -17,12 +17,12 @@ export function TodoList({ todos, onCompleted, onDeleted, onEdited, editItem, on
           onEdited={() => onEdited(id)}
           onTimerOn={() => onTimerOn(id)}
           editItem={editItem}
-          timerInProgress={timerInProgress}
+          activeId={activeId}
         />
       </li>
     );
   });
-  return <ul className="todo-list">{elements}</ul>;
+  return <ul className={classes['todo-list']}>{elements}</ul>;
 }
 
 TodoList.propTypes = {
@@ -30,8 +30,6 @@ TodoList.propTypes = {
     PropTypes.shape({
       label: PropTypes.string,
       timerTime: PropTypes.number,
-      timerId: PropTypes.number,
-      timerMark: PropTypes.number,
       completed: PropTypes.bool,
       edited: PropTypes.bool,
       id: PropTypes.number,
@@ -43,5 +41,5 @@ TodoList.propTypes = {
   onEdited: PropTypes.func.isRequired,
   editItem: PropTypes.func.isRequired,
   onTimerOn: PropTypes.func.isRequired,
-  timerInProgress: PropTypes.bool.isRequired,
+  activeId: PropTypes.number.isRequired,
 };

@@ -1,71 +1,60 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatDistanceToNow } from 'date-fns';
-
-import './todo-item.css';
+// import { formatDistanceToNow } from 'date-fns';
 
 import { TodoItemInputForm } from '../todo-item-input-form/todo-item-input-form';
+import { getFunctionWrapper } from '../../services/get-function-wrapper';
+import { getShowingTime } from '../../services/get-showing-time';
+import { getCreatedAgo } from '../../services/get-created-ago';
+
+import classes from './todo-item.module.css';
 
 export function TodoItem({
   id,
-  editItem,
   label,
   timerTime,
-  timerId,
-  completed,
   edited,
+  completed,
   createdDate,
-  onCompleted,
+  editItem,
   onEdited,
+  onCompleted,
   onDeleted,
   onTimerOn,
-  timerInProgress,
+  activeId,
 }) {
-  let classNames = '';
+  const todoItemClasses = [completed ? classes.completed : '', edited ? classes.editing : ''].join(' ');
 
-  if (completed) {
-    classNames += 'completed ';
-  }
+  const createdAgo = getCreatedAgo(createdDate);
 
-  if (edited) {
-    classNames += 'editing ';
-  }
+  const showTime = getShowingTime(timerTime);
 
-  const createdAgo = `created ${formatDistanceToNow(createdDate, {
-    includeSeconds: true,
-  })} ago`;
-
-  const timerButtonClass = timerId ? 'pause' : 'start';
-
-  const showTime = `${Math.floor(timerTime / 60)
-    .toString()
-    .padStart(2, '0')}:${(timerTime % 60).toString().padStart(2, '0')}`;
-
-  const onFunctionCall = (propStatus, func = () => {}) => {
-    if (propStatus) onTimerOn();
-    func();
-  };
-
-  const onPressComplete = () => onFunctionCall(timerId, onCompleted);
-  const onPressDelete = () => onFunctionCall(timerId, onDeleted);
-  const onPressTimer = () => onFunctionCall(!completed && (!timerInProgress || timerId));
+  const onPressComplete = () => getFunctionWrapper(activeId === id, onTimerOn, onCompleted);
+  const onPressDelete = () => getFunctionWrapper(activeId === id, onTimerOn, onDeleted);
+  const onPressTimer = () => getFunctionWrapper(!completed && (!activeId || activeId === id), onTimerOn);
 
   return (
-    <div className={classNames}>
-      <div className="view">
-        <input className="toggle" type="checkbox" onClick={onPressComplete} />
+    <div className={todoItemClasses}>
+      <div className={classes.view}>
+        <input className={classes.toggle} type="checkbox" onClick={onPressComplete} />
         <label htmlFor={id}>
-          <span aria-hidden="true" className="description" onClick={onPressComplete}>
+          <span aria-hidden="true" className={classes.description} onClick={onPressComplete}>
             {label}
           </span>
-          <span className="timer">
-            <button className={`timer-button timer-button-${timerButtonClass}`} onClick={onPressTimer} type="button" />
+          <span className={classes.timer}>
+            <button
+              className={`${classes['timer-button']} ${
+                activeId === id ? classes['timer-button-pause'] : classes['timer-button-start']
+              }`}
+              onClick={onPressTimer}
+              type="button"
+            />
             {showTime}
           </span>
-          <span className="created">{createdAgo}</span>
+          <span className={classes.created}>{createdAgo}</span>
         </label>
-        <button className="icon icon-edit" type="button" onClick={onEdited} />
-        <button className="icon icon-destroy" type="button" onClick={onPressDelete} />
+        <button className={`${classes.icon} ${classes['icon-edit']}`} type="button" onClick={onEdited} />
+        <button className={`${classes.icon} ${classes['icon-destroy']}`} type="button" onClick={onPressDelete} />
       </div>
       <TodoItemInputForm id={id} label={label} edited={edited} editItem={editItem} />
     </div>
@@ -73,8 +62,8 @@ export function TodoItem({
 }
 
 TodoItem.defaultProps = {
-  completed: false,
   edited: false,
+  completed: false,
   createdDate: new Date(),
 };
 
@@ -82,7 +71,6 @@ TodoItem.propTypes = {
   id: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
   timerTime: PropTypes.number.isRequired,
-  timerId: PropTypes.number.isRequired,
   edited: PropTypes.bool,
   completed: PropTypes.bool,
   createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
@@ -91,4 +79,5 @@ TodoItem.propTypes = {
   onCompleted: PropTypes.func.isRequired,
   onDeleted: PropTypes.func.isRequired,
   onTimerOn: PropTypes.func.isRequired,
+  activeId: PropTypes.number.isRequired,
 };
