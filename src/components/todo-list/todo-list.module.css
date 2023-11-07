@@ -1,0 +1,22 @@
+.todo-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.todo-list li {
+  position: relative;
+  font-size: 24px;
+  border-bottom: 1px solid #ededed;
+}
+
+.todo-list li:last-child {
+  border-bottom: none;
+}
+
+.todo-list li label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 85px 15px 60px;
+}

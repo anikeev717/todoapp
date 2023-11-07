@@ -1,31 +1,20 @@
-/* eslint-disable class-methods-use-this */
-import React, { Component } from 'react';
+/* eslint-disable no-shadow */
+import React, { useState, useEffect, useRef } from 'react';
 
-import './app.css';
 import { TodoList } from '../todo-list/todo-list';
 import { NewTodoItem } from '../new-todo-item/new-todo-item';
 import { Footer } from '../footer/footer';
+import { getTimerMark, getTimerTimeValue } from '../../services/get-timer-functions';
 
-export class App extends Component {
-  state = {
-    todoData: [],
-    filterName: 'all',
-  };
+import classes from './app.module.css';
 
-  id = 0;
+export function App() {
+  const [todoData, setTodoData] = useState([]);
+  const [filterName, setFilterName] = useState('all');
+  const [activeId, setActiveId] = useState(0);
+  const refId = useRef(0);
 
-  createItem = (label) => {
-    this.id += 1;
-    return {
-      label,
-      completed: false,
-      edited: false,
-      id: this.id,
-      createdDate: new Date(),
-    };
-  };
-
-  onToggled = (arr, id, propName, labelNewValue) => {
+  const onToggled = (arr, id, propName, labelNewValue) => {
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr[index];
     const newItem = {
@@ -36,90 +25,118 @@ export class App extends Component {
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   };
 
-  onCompleted = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.onToggled(todoData, id, 'completed'),
-      };
-    });
-  };
-
-  onEdited = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.onToggled(todoData, id, 'edited'),
-      };
-    });
-  };
-
-  editItem = (id, value) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.onToggled(todoData, id, 'edited', value),
-      };
-    });
-  };
-
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const index = todoData.findIndex((e) => e.id === id);
-      const todoDataFresh = [...todoData.slice(0, index), ...todoData.slice(index + 1)];
-      return { todoData: todoDataFresh };
-    });
-  };
-
-  addItem = (text) => {
-    const newItem = this.createItem(text);
-    this.setState(({ todoData }) => {
-      const todoDataFresh = [...todoData.slice(), newItem];
-      return { todoData: todoDataFresh };
-    });
-  };
-
-  clearCompleted = () => {
-    this.setState(({ todoData }) => {
-      const todoDataFresh = [...todoData.filter((e) => !e.completed)];
-      return { todoData: todoDataFresh };
-    });
-  };
-
-  onFilter = (todos, filterName) => {
+  const onFilter = (todoData, filterName) => {
     switch (filterName) {
       case 'active':
-        return todos.filter((e) => !e.completed);
+        return todoData.filter((e) => !e.completed);
       case 'completed':
-        return todos.filter((e) => e.completed);
+        return todoData.filter((e) => e.completed);
       default:
-        return todos;
+        return todoData;
     }
   };
 
-  onFilterChange = (filterName) => {
-    this.setState({ filterName });
+  const onCompleted = (id) => {
+    setTodoData(onToggled(todoData, id, 'completed'));
   };
 
-  render() {
-    const { todoData, filterName } = this.state;
-    const visibleData = this.onFilter(todoData, filterName);
-    const activeCount = todoData.filter((e) => !e.completed).length;
+  const onEdited = (id) => {
+    setTodoData(onToggled(todoData, id, 'edited'));
+  };
 
-    return (
-      <div className="todoapp">
-        <NewTodoItem onItemAdded={this.addItem} />
-        <TodoList
-          todos={visibleData}
-          onCompleted={this.onCompleted}
-          onDeleted={this.deleteItem}
-          onEdited={this.onEdited}
-          editItem={this.editItem}
-        />
-        <Footer
-          todoLeft={activeCount}
-          onClearCompleted={this.clearCompleted}
-          filterName={filterName}
-          onFilterChange={this.onFilterChange}
-        />
-      </div>
-    );
-  }
+  const deleteItem = (id) => {
+    setTodoData((prev) => {
+      const index = prev.findIndex((e) => e.id === id);
+      const todoDataFresh = [...prev.slice(0, index), ...prev.slice(index + 1)];
+      return todoDataFresh;
+    });
+  };
+
+  const createItem = (label, timerTime) => {
+    refId.current += 1;
+    return {
+      label,
+      timerTime,
+      completed: false,
+      edited: false,
+      id: refId.current,
+      createdDate: new Date(),
+    };
+  };
+
+  const addItem = (text, time) => {
+    const newItem = createItem(text, time);
+    setTodoData((prev) => {
+      const todoDataFresh = [...prev.slice(), newItem];
+      return todoDataFresh;
+    });
+  };
+
+  const clearCompleted = () => {
+    setTodoData((prev) => {
+      const todoDataFresh = [...prev.filter((e) => !e.completed || e.edited)];
+      return todoDataFresh;
+    });
+  };
+
+  const editItem = (id, value) => {
+    setTodoData(onToggled(todoData, id, 'edited', value));
+  };
+
+  const onFilterChange = (filterName) => {
+    setFilterName(filterName);
+  };
+
+  const onTimerOn = (id) =>
+    setActiveId((prev) => {
+      if (!prev) return id;
+      return 0;
+    });
+
+  const visibleData = onFilter(todoData, filterName);
+  const activeCount = todoData.filter((e) => !e.completed).length;
+
+  useEffect(() => {
+    const timerMark = getTimerMark();
+    const interval = setInterval(() => {
+      if (activeId) {
+        const index = todoData.findIndex((el) => el.id === activeId);
+        const oldItem = todoData[index];
+        const { timerTime } = oldItem;
+        const newItem = {
+          ...oldItem,
+          timerTime: getTimerTimeValue(timerTime, timerMark),
+        };
+        if (!timerTime) {
+          setActiveId(0);
+          newItem.completed = true;
+        }
+        setTodoData([...todoData.slice(0, index), newItem, ...todoData.slice(index + 1)]);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [activeId, todoData]);
+  return (
+    <div className={classes.todoapp}>
+      <NewTodoItem onItemAdded={addItem} />
+      <TodoList
+        todos={visibleData}
+        onCompleted={onCompleted}
+        onDeleted={deleteItem}
+        onEdited={onEdited}
+        editItem={editItem}
+        onTimerOn={onTimerOn}
+        activeId={activeId}
+      />
+      <Footer
+        todoLeft={activeCount}
+        onClearCompleted={clearCompleted}
+        filterName={filterName}
+        onFilterChange={onFilterChange}
+      />
+    </div>
+  );
 }

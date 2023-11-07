@@ -1,48 +1,41 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import './todo-item-input-form.css';
+import { getValidLabel } from '../../services/get-valid-values-functions';
 
-export class TodoItemInputForm extends Component {
-  constructor(props) {
-    super(props);
+import classes from './todo-item-input-form.module.css';
 
-    this.state = {
-      inputValue: props.label,
-    };
+export function TodoItemInputForm({ label, id, editItem, edited }) {
+  const [inputValue, setInputValue] = useState(label);
 
-    this.onLabelChange = (e) => {
-      this.setState({
-        inputValue: e.target.value,
-      });
-    };
+  const onLabelChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
-    this.onSubmit = (e) => {
-      e.preventDefault();
-      const { inputValue } = this.state;
-      const { id, editItem } = this.props;
-      const newLabel = inputValue.replace(/\s+/g, ' ').trim();
-      if (newLabel) {
-        editItem(id, newLabel);
-        this.setState({
-          inputValue: newLabel,
-        });
-      }
-    };
-  }
-
-  render() {
-    const { edited } = this.props;
-    const { inputValue } = this.state;
-    if (edited) {
-      return (
-        <form onSubmit={this.onSubmit}>
-          <input type="text" className="edit" value={inputValue} onChange={this.onLabelChange} />
-        </form>
-      );
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const newLabel = getValidLabel(inputValue);
+    if (newLabel) {
+      editItem(id, newLabel);
+      setInputValue(newLabel);
     }
-    return null;
+  };
+
+  const onEscape = (e) => {
+    if (e.key === 'Escape') {
+      editItem(id, label);
+      setInputValue(label);
+    }
+  };
+
+  if (edited) {
+    return (
+      <form onSubmit={onSubmit}>
+        <input type="text" className={classes.edit} value={inputValue} onKeyDown={onEscape} onChange={onLabelChange} />
+      </form>
+    );
   }
+  return null;
 }
 
 TodoItemInputForm.defaultProps = {
@@ -50,8 +43,8 @@ TodoItemInputForm.defaultProps = {
 };
 
 TodoItemInputForm.propTypes = {
-  id: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
-  edited: PropTypes.bool,
+  id: PropTypes.number.isRequired,
   editItem: PropTypes.func.isRequired,
+  edited: PropTypes.bool,
 };
