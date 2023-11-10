@@ -51,14 +51,19 @@
 
 .description {
   display: block;
-  line-height: 1.2;
-  transition: color 0.4s;
-  font-weight: 400;
-  color: #4d4d4d;
   width: 60%;
 }
 
-.completed .description {
+.name {
+  font-weight: 400;
+  line-height: 1.2;
+  color: #4d4d4d;
+  transition: color 0.4s;
+  cursor: pointer;
+  padding-left: 60px;
+}
+
+.completed .name {
   color: #cdcdcd;
   text-decoration: line-through;
 }

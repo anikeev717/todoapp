@@ -38,9 +38,11 @@ export function TodoItem({ id, label, timerTime, edited, completed, createdDate 
       <div className={classes.view}>
         <input className={classes.toggle} type="checkbox" onClick={onPressComplete} />
         <label htmlFor={id}>
-          <span aria-hidden="true" className={classes.description} onClick={onPressComplete}>
-            {label}
-          </span>
+          <div className={classes.description}>
+            <span aria-hidden="true" className={classes.name} onClick={onPressComplete}>
+              {label}
+            </span>
+          </div>
           <span className={classes.timer}>
             <button
               className={`${classes['timer-button']} ${
