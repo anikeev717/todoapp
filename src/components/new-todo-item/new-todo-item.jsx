@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { getValidTimeValue, getValidLabel } from '../../services/get-valid-values-functions';
+import { useAutoFocus } from '../../hooks/use-auto-focus';
 
 import classes from './new-todo-item.module.css';
 
@@ -9,7 +10,7 @@ export function NewTodoItem({ onItemAdded }) {
   const [label, setLabel] = useState('');
   const [time, setTime] = useState({ min: '', sec: '' });
   const [emptyStatus, setEmptyStatus] = useState(false);
-  const labelRef = useRef(null);
+  const labelRef = useAutoFocus();
   const minRef = useRef(null);
 
   const onLabelChange = (e) => {
@@ -48,12 +49,13 @@ export function NewTodoItem({ onItemAdded }) {
   };
 
   const { min, sec } = time;
+  const withEmptyClass = (value) => [classes['new-todo'], emptyStatus && value ? classes.empty : ''].join(' ');
 
   return (
     <form className={classes.header} onSubmit={onSubmit}>
       <h1>todos</h1>
       <input
-        className={`${classes['new-todo']} ${emptyStatus && !label ? classes.empty : ''}`}
+        className={`${withEmptyClass(!label)}`}
         placeholder="What needs to be done?"
         onKeyDown={(e) => onKeyEnter(e, minRef.current)}
         onChange={onLabelChange}
@@ -61,9 +63,7 @@ export function NewTodoItem({ onItemAdded }) {
         ref={labelRef}
       />
       <input
-        className={`${classes['new-todo']} ${classes['new-todo-timer']} ${
-          emptyStatus && !min && !sec ? classes.empty : ''
-        }`}
+        className={`${withEmptyClass(!min && !sec)}`}
         placeholder="Min"
         onKeyDown={(e) => onKeyEnter(e, labelRef.current)}
         onChange={(e) => {
@@ -73,9 +73,7 @@ export function NewTodoItem({ onItemAdded }) {
         ref={minRef}
       />
       <input
-        className={`${classes['new-todo']} ${classes['new-todo-timer']} ${
-          emptyStatus && !min && !sec ? classes.empty : ''
-        }`}
+        className={`${withEmptyClass(!min && !sec)}`}
         placeholder="Sec"
         onKeyDown={(e) => onKeyEnter(e, labelRef.current)}
         onChange={(e) => {
